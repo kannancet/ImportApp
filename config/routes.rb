@@ -4,7 +4,12 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'companies#index'
-  resources :companies
+  resources :companies do
+    member do
+      get 'operations_search'
+    end
+  end
+  match 'download_csv/:company_id/:query' => 'companies#download_csv', via: :get, as: :download_csv
   match 'operations/upload' => 'companies#upload', via: :post
   match 'fetch_parsing_logs' => 'companies#fetch_parsing_logs', via: :get
   mount Resque::Server, :at => "/resque"

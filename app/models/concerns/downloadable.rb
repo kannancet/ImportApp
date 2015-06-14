@@ -15,8 +15,9 @@ module Downloadable
     #Function to save file from url
     def save_file(url)
     	puts "Downloading file from URL ..."
-  	file_name = url.split("/").last
-  	file_path = "#{Rails.root}/public/#{file_name}"
+  	  file_name = url.split("/").last
+  	  file_path = "#{Rails.root}/public/#{file_name}"
+      
       open(file_path, 'wb') do |file|
         file << open(url).read
       end  

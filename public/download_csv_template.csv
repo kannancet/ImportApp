@@ -1,0 +1,21 @@
+company,invoice_num,invoice_date,operation_date,amount,reporter,notes,status,kind
+Company X,C50496,2013-11-16,2013-11-16,19700.69,Esteban Raynor,"Qui sed delectus consequuntur recusandae qui.
+Repudiandae reiciendis nisi beatae quidem ratione.
+Et sint sapiente soluta qui.
+Dolorum nobis ullam.",accepted,internal;delegation;other;important;Negligible
+Company X,C27142,2014-4-5,2014-4-1,19918.13,Hazel Schinner,Voluptate ut quis repudiandae.,accepted,other;Important;delegation
+Company X,C64712,2013-5-25,2013-5-17,11780.31,Lucius Parisian,"Nostrum odit expedita.
+Expedita ut odit et et magnam neque numquam.
+Illo velit voluptatem est quisquam incidunt voluptas.",other,client
+Company X,C45897,2012-9-17,2012-9-13,17692.15,Miss Vella Hahn,Tenetur id quia atque.,rejected,important;negligible;other;Delegation;internal
+Company X,C89459,2014-10-29,2014-10-21,13102.42,Magali Reichel,Voluptatem ipsum sint nisi iusto nihil id maiores.,accepted,negligible
+Company X,C41642,2012-10-29,2012-10-25,18336.16,Selena DuBuque,"Molestiae non eligendi itaque.
+Et fuga error.
+Excepturi distinctio qui omnis sit saepe facilis.
+Delectus eum veritatis optio id nihil.",rejected,important;delegation;other;client
+Company X,C29632,2012-12-28,2012-12-26,10883.92,Nikolas Morar,Error fugit repellat corporis repudiandae non.,accepted,other;negligible;Delegation;internal;client
+Company X,C51520,2013-10-4,2013-9-28,12338.54,Michale Herman,Eius sunt in.,rejected,Delegation;Internal
+Company X,C6577,2013-8-26,2013-8-18,12868.47,Dallas Streich,"Suscipit dicta recusandae vel ad.
+Sunt odit saepe.
+Et facere sequi quasi nostrum et.",accepted,Delegation
+Company X,C36598,2015-5-24,2015-5-17,16846.86,Elroy Schumm IV,Aliquid et facere.,other,client;Other

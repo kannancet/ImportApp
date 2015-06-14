@@ -84,6 +84,23 @@ class CompaniesController < ApplicationController
     render partial: "parsing_log"
   end
 
+  #Function to search operations
+  def operations_search
+    query = params[:query]
+    company_id = params[:id]
+    @operations = Operation.search_data(query, company_id)
+
+    render partial: "operations_search"
+  end
+
+  #Function to download CSV
+  def download_csv
+    query = params[:query]
+    company_id = params[:company_id]
+    file = Operation.create_csv(query, company_id)  
+    send_file file
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_company

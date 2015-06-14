@@ -6,7 +6,12 @@ class Operation < ActiveRecord::Base
   validates_numericality_of :amount, greater_than: 0
   validates_uniqueness_of :invoice_num
 
+  #Enabling fulltext search
+  searchkick
+
   include Importable
   include Downloadable
+  include Searchable
+  include CSVDownloadable
 
 end

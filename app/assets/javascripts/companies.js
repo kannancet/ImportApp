@@ -27,6 +27,47 @@ Element :  Autoload the campanies via ajax .
     }
 
 /*==================================
+Feature : Set download CSV URL
+Page : http://localhost/
+Element :  Set download csv url on change of text field.
+====================================*/
+    function setDownloadCSVURL(query, company_id){
+        if(query == ""){
+            query = "*";
+        }
+        new_url = window.location.origin + "/download_csv/" + company_id + "/" + query ;
+        $("#download_csv"+company_id).attr('href', new_url);
+    }
+
+/*==================================
+Feature : Search through Operations
+Page : http://localhost/
+Element :  Search box below operations.
+====================================*/
+    function implementSearchOnOperations(){
+        $(document).on('change', '.ops-search', function(){
+
+          query = $(this).val();
+          company_id = $(this).attr("data-company-id");
+          setDownloadCSVURL(query, company_id);
+
+            $.ajax({
+                url: '/companies/' + company_id + '/operations_search',
+                data: {query: query},
+                method: 'GET',
+                success: function(response) {
+                  $('#operations_body').html(response);
+
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });   
+        })        
+    }
+
+
+/*==================================
 Feature : Load all companies with operations
 Page : http://localhost/
 Element :  Autoload the campanies via ajax .
@@ -36,13 +77,19 @@ Element :  Autoload the campanies via ajax .
         $("#companies_list").on('click', ".company_info_show", function() {
         	
         	company_id = $(this).attr("data-company-id");
+            loader_url = $("#loader_element").val();
+            $('.modal-body').html("<p>Loading Informations....<img src='" + loader_url + "' /></p>");
+
+            $('#myModal').modal('show');
 
             $.ajax({
                 url: '/companies/' + company_id,
                 method: 'GET',
                 success: function(response) {
                   $('.modal-body').html(response);
-                  $('#detail_modal').click();
+                  hideStatus();
+
+                  implementSearchOnOperations();
                 },
                 error: function(response) {
                     console.log(response);
@@ -138,7 +185,7 @@ Element : Button upload feeback file.
         $(".upload_btn").click(function(){
             $("#upload_widget").slideToggle();
         })
-        
+
         $(".parse_btn").click(function(){
             $("#parsing_area").slideToggle();
         })
@@ -171,6 +218,17 @@ Element : Progres bar with parsing info.
           $("#total_rows" + id).text(data.total_rows);
           $("#status" + id).text(data.status);
         });       
+    }
+
+/*==================================
+Feature : Hide and SHow status button.
+Page : http://localhost
+Element : Inside Modal.
+====================================*/
+    function hideStatus(){
+      $(document).on('click',".hide_stats", function(){
+        $("#stats_table").slideToggle();
+      })        
     }
 
 /*==================================
