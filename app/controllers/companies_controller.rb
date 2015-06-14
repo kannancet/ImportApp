@@ -5,6 +5,8 @@ class CompaniesController < ApplicationController
   # GET /companies.json
   def index
     @companies = Company.page(params[:page])
+    @log = ParsingLog.running_parser
+
     render partial: "companies_list" if request.xhr?  
   end
 
@@ -63,6 +65,25 @@ class CompaniesController < ApplicationController
     end
   end
 
+  # POST /companies/upload
+  # File upload from companies index
+  def upload
+    if valid_data? 
+      @log = ParsingLog.new
+      @log.operation_file = upload_params
+      @log.save
+      
+      Resque.enqueue(UploadParser, @log.id)
+      render text: "Upload Successful"
+    end
+  end
+
+  #Function to fetch parsing logs
+  def fetch_parsing_logs
+    @log = ParsingLog.running_parser
+    render partial: "parsing_log"
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_company
@@ -72,5 +93,18 @@ class CompaniesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def company_params
       params[:company]
+    end
+
+    #Function to permit upload params
+    def upload_params
+      params.require(:upload_file)
+    end
+
+    #Funtion to check if valid data
+    def valid_data?
+      not_blank = (params[:upload_file] != "")
+      is_csv = (params[:upload_file].content_type == "text/csv")
+
+      not_blank && is_csv
     end
 end

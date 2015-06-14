@@ -7,5 +7,6 @@ class Operation < ActiveRecord::Base
   validates_uniqueness_of :invoice_num
 
   include Importable
+  include Downloadable
 
 end

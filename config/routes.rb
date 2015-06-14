@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'companies#index'
   resources :companies
-
+  match 'operations/upload' => 'companies#upload', via: :post
+  match 'fetch_parsing_logs' => 'companies#fetch_parsing_logs', via: :get
+  mount Resque::Server, :at => "/resque"
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

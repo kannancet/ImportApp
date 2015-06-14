@@ -57,3 +57,15 @@ gem 'kaminari'
 #For cleaner views
 gem 'slim'
 
+#For file upload
+gem "paperclip"
+
+#Pusher for real time.
+gem 'pusher'
+
+#Rescue for bckground procesing
+gem 'resque', :require => "resque/server"
+
+#For debugging
+gem 'pry'
+

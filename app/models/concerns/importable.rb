@@ -1,18 +1,49 @@
 #This module implements import data 
 module Importable
   extend ActiveSupport::Concern
-  
+
   #All class methods are defined here.
   module ClassMethods
 
-    #Function to import operations from CSV.
-    def import
-      notify_on_parsing_log
+    PARSING_ROW_INCREMENT_COUNT = 1
+    PARSING_ROW_DEFAULT_COUNT = 0
 
-      SmarterCSV.process(IMPORT_OPERATION_FILE) do |data|
+    #Function to import operations from CSV.
+    def import(file, parsing_log_id = new_parsing_log_id)
+      notify_on_parsing_log
+      @log = ParsingLog.find(parsing_log_id)
+
+      SmarterCSV.process(file) do |data|
         data = data.first
         sync_data(data)
       end
+
+      update_parsinglog_status
+    end
+
+    #Function to update parsing log status
+    def update_parsinglog_status
+      @log.update(status: "complete")
+    end
+
+    #Function to create new parsing log if parsing log id nil
+    def new_parsing_log_id
+      log = ParsingLog.create(total_rows_failed: 0, total_rows_suceeded: 0, total_rows_parsed: 0)
+      log.id
+    end
+
+    #Function to increment parsing log success
+    def increment_parsing_log_success
+      success_count = (@log.total_rows_suceeded || PARSING_ROW_DEFAULT_COUNT) + PARSING_ROW_INCREMENT_COUNT
+      total_count = (@log.total_rows_failed || PARSING_ROW_DEFAULT_COUNT) + success_count
+      @log.update(total_rows_suceeded: success_count, total_rows_parsed: total_count)
+    end
+
+    #Function to increment parsing log error
+    def increment_parsing_log_failed
+      failed_count = (@log.total_rows_failed || PARSING_ROW_DEFAULT_COUNT) + PARSING_ROW_INCREMENT_COUNT
+      total_count = (@log.total_rows_suceeded || PARSING_ROW_DEFAULT_COUNT) + failed_count
+      @log.update(total_rows_failed: failed_count, total_rows_parsed: total_count)
     end
 
     #Function to sync data
@@ -20,10 +51,25 @@ module Importable
       begin
         operation = create_operation(data)
         sync_categories(operation) if operation.kind
+        increment_parsing_log_success
 
       rescue Exception => e
+        increment_parsing_log_failed
         log_data_invalid_error(data, e)
       end
+
+      notify_pusher
+    end
+
+    #Function to notify pusher on reltime status
+    def notify_pusher
+      Pusher['parsing_log'].trigger('parse_operations', {
+        success_rows: @log.total_rows_suceeded || PARSING_ROW_DEFAULT_COUNT,
+        failed_rows: @log.total_rows_failed || PARSING_ROW_DEFAULT_COUNT,
+        total_rows: @log.total_rows_parsed || PARSING_ROW_DEFAULT_COUNT,
+        status: @log.status,
+        id: @log.id
+      })      
     end
 
     #Function to find company from name and return company_id

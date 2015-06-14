@@ -6,3 +6,4 @@ DATE_FORMATS = [
 			   ]
 
 OPERATION_IMPORT_LOG = "#{Rails.root}/log/operation_import.log"
+

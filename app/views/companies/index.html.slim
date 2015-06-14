@@ -1,8 +1,19 @@
 - model_class = Company
 .page-header
   h1= t '.title', :default => model_class.model_name.human.pluralize.titleize
+  = link_to "Upload Operations", "#", class: "btn btn-info upload_btn padd20" 
+
+  = link_to "View/Hide Parsing Log", "#", class: "btn btn-info parse_btn"
+  div id="upload_widget" style="display: none;"
+    = render "upload_widget"
+
+div id="parsing_area" style="#{show_hide_log(@log)}"
+  = render "parsing_log"
+hr
 #companies_list
   .row
     p
       | Loading Companies.... #{image_tag "loader.gif"}
 = hidden_field_tag "current_page", params[:page] || 1
+
+
